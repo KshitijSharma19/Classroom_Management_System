@@ -3,6 +3,12 @@
  */
 
 // User will place their API key here
+if (!GEMINI_API_KEY) {
+    throw new Error(
+        "Gemini API key not found. Create js/config.js and add your Gemini API key."
+    );
+}
+
 const API_KEY = GEMINI_API_KEY;
 
 class EduChatbot {
