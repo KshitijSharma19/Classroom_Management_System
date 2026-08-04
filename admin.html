@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - EduTech</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        bg: {
+                            primary: 'var(--bg-primary)',
+                            surface: 'var(--bg-surface)',
+                            card: 'var(--bg-card)',
+                        },
+                        text: {
+                            primary: 'var(--text-primary)',
+                            secondary: 'var(--text-secondary)',
+                        },
+                        primary: 'var(--primary-color)',
+                        secondary: 'var(--secondary-color)',
+                        accent: 'var(--accent-color)',
+                        success: 'var(--success-color)',
+                        warning: 'var(--warning-color)',
+                        danger: 'var(--danger-color)',
+                        border: 'var(--border-color)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-bg-primary text-text-primary overflow-hidden flex h-screen transition-all-300">
+
+    <!-- Sidebar -->
+    <aside id="sidebar"
+        class="fixed top-0 left-0 h-full w-64 glass border-r border-border z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="p-6 border-b border-border flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div
+                    class="w-10 h-10 rounded-xl bg-gradient-primary text-white flex items-center justify-center shadow-lg shadow-primary/30">
+                    <i class="fas fa-graduation-cap text-xl"></i>
+                </div>
+                <span class="text-xl font-bold text-text-primary tracking-tight">EduTech</span>
+            </div>
+            <button id="mobile-menu-close" class="lg:hidden text-text-secondary hover:text-text-primary">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1 custom-scrollbar">
+            <div class="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2 px-3 mt-4">Overview
+            </div>
+            <a href="#"
+                class="nav-link active flex items-center gap-3 px-3 py-2.5 rounded-xl text-primary bg-primary/10 transition-all-300 font-medium"
+                data-target="dashboard">
+                <i class="fas fa-home w-5 text-center"></i> Dashboard
+            </a>
+
+            <div class="text-xs font-semibold text-text-secondary uppercase tracking-wider mb-2 px-3 mt-6">Management
+            </div>
+            <a href="#"
+                class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-bg-surface hover:text-primary transition-all-300 font-medium"
+                data-target="users">
+                <i class="fas fa-users w-5 text-center"></i> Users
+            </a>
+            <a href="#"
+                class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-bg-surface hover:text-primary transition-all-300 font-medium"
+                data-target="courses">
+                <i class="fas fa-book w-5 text-center"></i> Courses
+            </a>
+            <a href="#"
+                class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-bg-surface hover:text-primary transition-all-300 font-medium"
+                data-target="fees">
+                <i class="fas fa-file-invoice-dollar w-5 text-center"></i> Fee Management
+            </a>
+            <a href="#"
+                class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-bg-surface hover:text-primary transition-all-300 font-medium"
+                data-target="notices">
+                <i class="fas fa-bullhorn w-5 text-center"></i> Notice Board
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-border">
+            <a href="#"
+                class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-text-secondary hover:bg-bg-surface hover:text-primary transition-all-300 font-medium"
+                data-target="settings">
+                <i class="fas fa-cog w-5 text-center"></i> Settings
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64 flex-1 flex flex-col h-screen overflow-hidden transition-all-300">
+
+        <!-- Top Navbar -->
+        <header class="h-20 glass border-b border-border flex items-center justify-between px-6 z-30 sticky top-0">
+            <div class="flex items-center gap-4">
+                <button id="mobile-menu-open"
+                    class="lg:hidden w-10 h-10 rounded-lg flex items-center justify-center text-text-secondary hover:bg-bg-surface hover:text-text-primary transition-colors">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <div class="hidden md:flex items-center relative">
+                    <i class="fas fa-search absolute left-3 text-text-secondary"></i>
+                    <input type="text" placeholder="Search users, courses..."
+                        class="pl-10 pr-4 py-2 w-64 rounded-xl border border-border bg-bg-surface text-text-primary focus:ring-2 focus:ring-primary focus:border-transparent transition-all-300 text-sm">
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 sm:gap-5">
+                <button id="theme-toggle"
+                    class="w-10 h-10 rounded-full flex items-center justify-center text-text-secondary hover:bg-bg-surface hover:text-primary transition-colors">
+                    <i id="theme-toggle-icon" class="fas fa-moon"></i>
+                </button>
+
+                <div class="relative">
+                    <button
+                        class="w-10 h-10 rounded-full flex items-center justify-center text-text-secondary hover:bg-bg-surface hover:text-primary transition-colors relative">
+                        <i class="fas fa-bell"></i>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-danger rounded-full animate-ping"></span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-danger rounded-full"></span>
+                    </button>
+                </div>
+
+                <div class="h-8 w-px bg-border hidden sm:block"></div>
+
+                <div class="relative group cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-full bg-gradient-primary flex items-center justify-center text-white font-bold shadow-md">
+                            AD
+                        </div>
+                        <div class="hidden sm:block text-left">
+                            <p class="text-sm font-bold text-text-primary leading-tight">Admin User</p>
+                            <p class="text-xs text-text-secondary">System Admin</p>
+                        </div>
+                        <i
+                            class="fas fa-chevron-down text-xs text-text-secondary hidden sm:block group-hover:text-primary transition-colors"></i>
+                    </div>
+
+                    <!-- Dropdown -->
+                    <div
+                        class="absolute right-0 mt-2 w-48 glass border border-border rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                        <div class="py-2">
+                            <a href="#"
+                                class="block px-4 py-2 text-sm text-text-secondary hover:bg-bg-surface hover:text-primary transition-colors"
+                                onclick="switchSection('settings')"><i class="fas fa-user-circle w-5"></i> Profile</a>
+                            <div class="border-t border-border my-1"></div>
+                            <a href="#" id="dropdown-logout"
+                                class="block px-4 py-2 text-sm text-danger hover:bg-danger/10 transition-colors"><i
+                                    class="fas fa-sign-out-alt w-5"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Area -->
+        <main id="main-content" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 custom-scrollbar">
+            <!-- Content loaded via JS -->
+        </main>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay"
+        class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Scripts -->
+    <script src="js/store.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/admin.js"></script>
+
+    <script>
+        // Ensure Route Protection
+        document.addEventListener('DOMContentLoaded', () => {
+            auth.protectRoute('admin');
+        });
+    </script>
+</body>
+
+</html>
