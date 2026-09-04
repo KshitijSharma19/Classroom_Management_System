@@ -1,10 +1,19 @@
 # Classroom Management System
 
-A modern, full-stack Classroom Management System designed to streamline academic management through role-based dashboards, attendance tracking, assignment management, grade reporting, and a fully integrated AI-powered assistant.
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-V4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?style=flat-square&logo=sqlalchemy&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-SUPPORTED-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini-AI-8E75B2?style=flat-square&logo=google-gemini&logoColor=white)
+
+A modern, full-stack Classroom Management System designed to streamline academic management through role-based dashboards, attendance tracking, assignment management, grade reporting and a fully integrated AI-powered assistant.
 
 ## ✨ Features
 
-- **Role-Based Access Control:** Dedicated, highly customized dashboards for Students, Teachers, and Administrators.
+- **Role-Based Access Control:** Dedicated, highly customized dashboards for Students, Teachers and Administrators.
 - **Attendance & Grades:** Seamless tracking and monitoring for both students and faculty.
 - **Assignment Hub:** Teachers can create, assign, and grade homework, while students can track due dates and submit work.
 - **AI Chatbot Integration:** Built-in AI assistant powered by Google Gemini, offering role-aware contextual help (e.g., study tips for students, lesson planning for teachers).
@@ -39,15 +48,6 @@ graph TD
 ---
 
 ## 🛠️ Tech Stack
-
-![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)
-![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-V4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white)
-![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?style=flat-square&logo=sqlalchemy&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-SUPPORTED-4169E1?style=flat-square&logo=postgresql&logoColor=white)
-![Gemini](https://img.shields.io/badge/Gemini-AI-8E75B2?style=flat-square&logo=google-gemini&logoColor=white)
 
 | Category | Technology | Purpose |
 |----------|------------|---------|
