@@ -1,88 +1,85 @@
-# Classroom_Management_System
-A modern web based Classroom Management System designed to streamline academic management through role based dashboards, attendance tracking, assignment management, grade reporting and AI-powered assistance all in one place.
+# Classroom Management System
 
-## Features
+A modern, full-stack Classroom Management System designed to streamline academic management through role-based dashboards, attendance tracking, assignment management, grade reporting, and a fully integrated AI-powered assistant.
 
-- Student Dashboard
-- Teacher Dashboard
-- Admin Dashboard
-- Attendance Management
-- Assignment Management
-- Grade Management
-- Responsive UI
-- AI Chatbot powered by Google Gemini
+## ✨ Features
+
+- **Role-Based Access Control:** Dedicated, highly customized dashboards for Students, Teachers, and Administrators.
+- **Attendance & Grades:** Seamless tracking and monitoring for both students and faculty.
+- **Assignment Hub:** Teachers can create, assign, and grade homework, while students can track due dates and submit work.
+- **AI Chatbot Integration:** Built-in AI assistant powered by Google Gemini, offering role-aware contextual help (e.g., study tips for students, lesson planning for teachers).
+- **Responsive UI:** Beautiful, modern, and highly responsive user interface with a sleek dark mode option.
 
 ---
 
-## Live Demo
+## 🛠️ Tech Stack
 
-classroom-management-system-taupe.vercel.app
+### Frontend
+- **Framework:** React + Vite
+- **Styling:** Tailwind CSS (Vanilla CSS utilities)
+- **Icons:** Lucide React
+- **Routing:** React Router DOM
+
+### Backend & Database
+- **Framework:** FastAPI (Python)
+- **ORM:** SQLAlchemy
+- **Database:** NeonDB (Serverless Postgres)
+- **AI Integration:** Google GenAI SDK (Gemini API)
+- **Security:** Passlib (Bcrypt) for secure password hashing
 
 ---
 
-## Tech Stack
+## 🚀 Running the Project Locally
 
-- HTML5
-- CSS3
-- JavaScript
-- Google Gemini API
-
----
-
-## Running the Project
-
-1. Clone the repository
-
+### 1. Clone the repository
 ```bash
 git clone https://github.com/KshitijSharma19/Classroom_Management_System.git
+cd Classroom_Management_System
 ```
 
-2. Open the project folder.
-
-3. Create a new file:
-
-```
-js/config.js
-```
-
-4. Copy the contents of:
-
-```
-js/config.example.js
+### 2. Backend Setup
+Navigate to the backend directory and set up the Python environment:
+```bash
+cd backend
+python -m venv venv
+.\venv\Scripts\activate  # On Windows
+pip install -r requirements.txt
 ```
 
-into
-
-```
-js/config.js
-```
-
-5. Replace the empty key with your own Gemini API key.
-
-Example:
-
-```javascript
-const GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";
+**Configure API Keys:**
+Create a `.env` file in the `backend` directory and add your Google Gemini API key:
+```env
+GEMINI_API_KEY=your_actual_api_key_here
 ```
 
-6. Open the project using Live Server.
+**Start the Backend Server:**
+```bash
+uvicorn main:app --reload
+```
+The API will run on `http://127.0.0.1:8000`.
+
+### 3. Frontend Setup
+Open a new terminal, navigate to the frontend directory, and install dependencies:
+```bash
+cd frontend
+npm install
+```
+
+**Start the Development Server:**
+```bash
+npm run dev
+```
+The web app will run on `http://localhost:5173`.
 
 ---
 
-## AI Chatbot
+## 🤖 AI Chatbot
 
-For security reasons, the Gemini API key is **not included** in this repository.
-
-To use the chatbot, generate your own Gemini API key from Google AI Studio and add it to:
-
-```
-js/config.js
-```
-
-The chatbot will work normally after adding your own key.
+For security reasons, the Gemini API key is **not included** in this repository. 
+To use the chatbot, generate your own Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey) and add it to `backend/.env`. If the key is missing, the application will still function perfectly, but the chatbot will gracefully notify you that it needs a key.
 
 ---
 
-## Author
+## 👨‍💻 Author
 
-Kshitij Sharma!
+**Kshitij Sharma**
