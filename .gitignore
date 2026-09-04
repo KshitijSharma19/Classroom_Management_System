@@ -1,4 +1,23 @@
 node_modules/
 .vscode/
 
-js/config.js
+# API Keys and Environment Variables
+.env
+backend/.env
+
+# Database
+cms.db
+*.db
+*.sqlite3
+
+# Python / Backend
+backend/venv/
+backend/__pycache__/
+*.pyc
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Misc
+.DS_Store

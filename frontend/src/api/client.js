@@ -120,3 +120,16 @@ export async function deleteSubject(id) {
   const res = await fetch(`${BASE_URL}/subjects/${id}`, { method: 'DELETE' });
   return res.json();
 }
+
+export async function sendChatMessage(message, role) {
+  const res = await fetch(`${BASE_URL}/chat`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, role })
+  });
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.detail || 'Failed to send message');
+  }
+  return res.json();
+}

@@ -4,6 +4,13 @@ from sqlalchemy.orm import Session
 import models, schemas, database
 from typing import List
 from passlib.context import CryptContext
+import os
+from google import genai
+from google.genai import types
+from dotenv import load_dotenv
+
+load_dotenv()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 models.Base.metadata.create_all(bind=database.engine)
 
@@ -257,4 +264,23 @@ def delete_subject(subject_id: int, db: Session = Depends(database.get_db)):
     db.commit()
     return {"message": "Subject deleted"}
 
+@app.post("/chat")
+def chat_endpoint(req: schemas.ChatRequest):
+    if not GEMINI_API_KEY:
+        raise HTTPException(status_code=500, detail="Gemini API key is not configured on the server. Please add GEMINI_API_KEY to backend/.env file.")
+    
+    system_instruction = f"You are a helpful AI assistant for a {req.role.lower()} in a Classroom Management System. Provide concise, helpful, and professional responses tailored to their specific role."
+    
+    try:
+        client = genai.Client(api_key=GEMINI_API_KEY)
+        response = client.models.generate_content(
+            model='gemini-3.6-flash',
+            contents=req.message,
+            config=types.GenerateContentConfig(
+                system_instruction=system_instruction,
+            )
+        )
+        return {"response": response.text}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 

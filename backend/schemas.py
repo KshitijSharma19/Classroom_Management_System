@@ -145,3 +145,6 @@ class SubmissionResponse(SubmissionBase):
 class SubmissionGradeUpdate(BaseModel):
     score: int
 
+class ChatRequest(BaseModel):
+    message: str
+    role: str
