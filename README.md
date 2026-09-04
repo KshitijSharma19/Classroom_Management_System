@@ -12,20 +12,55 @@ A modern, full-stack Classroom Management System designed to streamline academic
 
 ---
 
+## 🏛️ System Architecture
+
+```mermaid
+graph TD
+    subgraph Frontend Client
+        UI[React + Vite Web App]
+    end
+
+    subgraph Backend Server
+        API[FastAPI Server]
+        ORM[SQLAlchemy]
+        API --- ORM
+    end
+
+    subgraph External Services
+        DB[(NeonDB / PostgreSQL)]
+        AI[Google Gemini AI]
+    end
+
+    UI <-->|HTTP REST / JSON| API
+    ORM <-->|Database Queries| DB
+    API <-->|GenAI SDK| AI
+```
+
+---
+
 ## 🛠️ Tech Stack
 
-### Frontend
-- **Framework:** React + Vite
-- **Styling:** Tailwind CSS (Vanilla CSS utilities)
-- **Icons:** Lucide React
-- **Routing:** React Router DOM
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/TailwindCSS-V4-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.14-3776AB?style=flat-square&logo=python&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-D71F00?style=flat-square&logo=sqlalchemy&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-SUPPORTED-4169E1?style=flat-square&logo=postgresql&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini-AI-8E75B2?style=flat-square&logo=google-gemini&logoColor=white)
 
-### Backend & Database
-- **Framework:** FastAPI (Python)
-- **ORM:** SQLAlchemy
-- **Database:** NeonDB (Serverless Postgres)
-- **AI Integration:** Google GenAI SDK (Gemini API)
-- **Security:** Passlib (Bcrypt) for secure password hashing
+| Category | Technology | Purpose |
+|----------|------------|---------|
+| **Frontend** | React 19 | Component-based User Interface |
+| **Build Tool** | Vite 8 | Extremely fast frontend build environment |
+| **Styling** | Tailwind CSS v4 | Utility-first responsive CSS styling |
+| **Backend** | FastAPI | High-performance asynchronous REST API |
+| **Language** | Python 3.14 | Backend programming language |
+| **ORM** | SQLAlchemy 2.0 | Database Object Relational Mapping |
+| **Database** | NeonDB (PostgreSQL) | Primary serverless data storage |
+| **AI Services** | Google Gemini | Intelligent Chatbot and contextual assistance |
+
+
 
 ---
 
