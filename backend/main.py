@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, APIRouter, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import models, schemas, database
@@ -15,6 +15,7 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 models.Base.metadata.create_all(bind=database.engine)
 
 app = FastAPI()
+api_router = APIRouter()
 
 app.add_middleware(
     CORSMiddleware,
@@ -32,54 +33,54 @@ def get_password_hash(password):
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
-@app.post("/auth/login")
+@api_router.post("/auth/login")
 def login(req: schemas.LoginRequest, db: Session = Depends(database.get_db)):
     user = db.query(models.User).filter(models.User.email == req.email).first()
     if not user or not verify_password(req.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"id": user.id, "name": user.name, "email": user.email, "role": user.role, "avatar": user.avatar}
 
-@app.get("/users", response_model=List[schemas.UserResponse])
+@api_router.get("/users", response_model=List[schemas.UserResponse])
 def get_users(role: str = None, db: Session = Depends(database.get_db)):
     query = db.query(models.User)
     if role:
         query = query.filter(models.User.role == role)
     return query.all()
 
-@app.get("/users/{user_id}", response_model=schemas.UserResponse)
+@api_router.get("/users/{user_id}", response_model=schemas.UserResponse)
 def get_user(user_id: int, db: Session = Depends(database.get_db)):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@app.get("/subjects", response_model=List[schemas.SubjectResponse])
+@api_router.get("/subjects", response_model=List[schemas.SubjectResponse])
 def get_subjects(db: Session = Depends(database.get_db)):
     return db.query(models.Subject).all()
 
-@app.get("/attendance/{student_id}", response_model=List[schemas.AttendanceResponse])
+@api_router.get("/attendance/{student_id}", response_model=List[schemas.AttendanceResponse])
 def get_attendance(student_id: int, db: Session = Depends(database.get_db)):
     return db.query(models.Attendance).filter(models.Attendance.student_id == student_id).all()
 
-@app.get("/marks/{student_id}", response_model=List[schemas.MarkResponse])
+@api_router.get("/marks/{student_id}", response_model=List[schemas.MarkResponse])
 def get_marks(student_id: int, db: Session = Depends(database.get_db)):
     return db.query(models.Mark).filter(models.Mark.student_id == student_id).all()
 
-@app.get("/assignments", response_model=List[schemas.AssignmentResponse])
+@api_router.get("/assignments", response_model=List[schemas.AssignmentResponse])
 def get_assignments(db: Session = Depends(database.get_db)):
     return db.query(models.Assignment).all()
 
-@app.get("/announcements", response_model=List[schemas.AnnouncementResponse])
+@api_router.get("/announcements", response_model=List[schemas.AnnouncementResponse])
 def get_announcements(db: Session = Depends(database.get_db)):
     return db.query(models.Announcement).all()
 
-@app.post("/assignments", response_model=schemas.AssignmentResponse)
+@api_router.post("/assignments", response_model=schemas.AssignmentResponse)
 def create_assignment(assignment: schemas.AssignmentBase, db: Session = Depends(database.get_db)):
     db_assignment = models.Assignment(**assignment.dict())
     db.add(db_assignment)
     db.commit()
     db.refresh(db_assignment)
-@app.put("/users/{user_id}", response_model=schemas.UserResponse)
+@api_router.put("/users/{user_id}", response_model=schemas.UserResponse)
 def update_user(user_id: int, user_update: schemas.UserUpdate, db: Session = Depends(database.get_db)):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
@@ -93,7 +94,7 @@ def update_user(user_id: int, user_update: schemas.UserUpdate, db: Session = Dep
     db.refresh(user)
     return user
 
-@app.put("/assignments/{assignment_id}/submit", response_model=schemas.AssignmentResponse)
+@api_router.put("/assignments/{assignment_id}/submit", response_model=schemas.AssignmentResponse)
 def submit_assignment(assignment_id: int, db: Session = Depends(database.get_db)):
     assignment = db.query(models.Assignment).filter(models.Assignment.id == assignment_id).first()
     if not assignment:
@@ -104,7 +105,7 @@ def submit_assignment(assignment_id: int, db: Session = Depends(database.get_db)
     db.refresh(assignment)
     return assignment
 
-@app.post("/announcements", response_model=schemas.AnnouncementResponse)
+@api_router.post("/announcements", response_model=schemas.AnnouncementResponse)
 def create_announcement(announcement: schemas.AnnouncementBase, db: Session = Depends(database.get_db)):
     db_announcement = models.Announcement(**announcement.dict())
     db.add(db_announcement)
@@ -112,7 +113,7 @@ def create_announcement(announcement: schemas.AnnouncementBase, db: Session = De
     db.refresh(db_announcement)
     return db_announcement
 
-@app.delete("/announcements/{announcement_id}")
+@api_router.delete("/announcements/{announcement_id}")
 def delete_announcement(announcement_id: int, db: Session = Depends(database.get_db)):
     announcement = db.query(models.Announcement).filter(models.Announcement.id == announcement_id).first()
     if not announcement:
@@ -121,7 +122,7 @@ def delete_announcement(announcement_id: int, db: Session = Depends(database.get
     db.commit()
     return {"message": "Announcement deleted successfully"}
 
-@app.delete("/assignments/{assignment_id}")
+@api_router.delete("/assignments/{assignment_id}")
 def delete_assignment(assignment_id: int, db: Session = Depends(database.get_db)):
     assignment = db.query(models.Assignment).filter(models.Assignment.id == assignment_id).first()
     if not assignment:
@@ -130,7 +131,7 @@ def delete_assignment(assignment_id: int, db: Session = Depends(database.get_db)
     db.commit()
     return {"message": "Assignment deleted successfully"}
 
-@app.put("/assignments/{assignment_id}", response_model=schemas.AssignmentResponse)
+@api_router.put("/assignments/{assignment_id}", response_model=schemas.AssignmentResponse)
 def update_assignment(assignment_id: int, assignment_update: schemas.AssignmentUpdate, db: Session = Depends(database.get_db)):
     assignment = db.query(models.Assignment).filter(models.Assignment.id == assignment_id).first()
     if not assignment:
@@ -144,7 +145,7 @@ def update_assignment(assignment_id: int, assignment_update: schemas.AssignmentU
     db.refresh(assignment)
     return assignment
 
-@app.put("/marks/{mark_id}", response_model=schemas.MarkResponse)
+@api_router.put("/marks/{mark_id}", response_model=schemas.MarkResponse)
 def update_mark(mark_id: int, mark_update: schemas.MarkUpdate, db: Session = Depends(database.get_db)):
     mark = db.query(models.Mark).filter(models.Mark.id == mark_id).first()
     if not mark:
@@ -156,7 +157,7 @@ def update_mark(mark_id: int, mark_update: schemas.MarkUpdate, db: Session = Dep
     db.refresh(mark)
     return mark
 
-@app.put("/attendance/{attendance_id}", response_model=schemas.AttendanceResponse)
+@api_router.put("/attendance/{attendance_id}", response_model=schemas.AttendanceResponse)
 def update_attendance(attendance_id: int, attendance_update: schemas.AttendanceUpdate, db: Session = Depends(database.get_db)):
     attendance = db.query(models.Attendance).filter(models.Attendance.id == attendance_id).first()
     if not attendance:
@@ -168,7 +169,7 @@ def update_attendance(attendance_id: int, attendance_update: schemas.AttendanceU
     db.refresh(attendance)
     return attendance
 
-@app.post("/submissions", response_model=schemas.SubmissionResponse)
+@api_router.post("/submissions", response_model=schemas.SubmissionResponse)
 def create_submission(submission: schemas.SubmissionBase, db: Session = Depends(database.get_db)):
     # Check if exists
     existing = db.query(models.Submission).filter(
@@ -188,11 +189,11 @@ def create_submission(submission: schemas.SubmissionBase, db: Session = Depends(
     db.refresh(db_submission)
     return db_submission
 
-@app.get("/submissions/{assignment_id}", response_model=List[schemas.SubmissionResponse])
+@api_router.get("/submissions/{assignment_id}", response_model=List[schemas.SubmissionResponse])
 def get_submissions(assignment_id: int, db: Session = Depends(database.get_db)):
     return db.query(models.Submission).filter(models.Submission.assignment_id == assignment_id).all()
 
-@app.put("/submissions/{submission_id}/grade", response_model=schemas.SubmissionResponse)
+@api_router.put("/submissions/{submission_id}/grade", response_model=schemas.SubmissionResponse)
 def grade_submission(submission_id: int, grade_update: schemas.SubmissionGradeUpdate, db: Session = Depends(database.get_db)):
     submission = db.query(models.Submission).filter(models.Submission.id == submission_id).first()
     if not submission:
@@ -203,7 +204,7 @@ def grade_submission(submission_id: int, grade_update: schemas.SubmissionGradeUp
     db.refresh(submission)
     return submission
 
-@app.post("/users", response_model=schemas.UserResponse)
+@api_router.post("/users", response_model=schemas.UserResponse)
 def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)):
     existing = db.query(models.User).filter(models.User.email == user.email).first()
     if existing:
@@ -226,7 +227,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)
     db.refresh(db_user)
     return db_user
 
-@app.delete("/users/{user_id}")
+@api_router.delete("/users/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(database.get_db)):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
@@ -235,7 +236,7 @@ def delete_user(user_id: int, db: Session = Depends(database.get_db)):
     db.commit()
     return {"message": "User deleted"}
 
-@app.post("/subjects", response_model=schemas.SubjectResponse)
+@api_router.post("/subjects", response_model=schemas.SubjectResponse)
 def create_subject(subject: schemas.SubjectBase, db: Session = Depends(database.get_db)):
     db_sub = models.Subject(**subject.dict())
     db.add(db_sub)
@@ -243,7 +244,7 @@ def create_subject(subject: schemas.SubjectBase, db: Session = Depends(database.
     db.refresh(db_sub)
     return db_sub
 
-@app.put("/subjects/{subject_id}", response_model=schemas.SubjectResponse)
+@api_router.put("/subjects/{subject_id}", response_model=schemas.SubjectResponse)
 def update_subject(subject_id: int, subject_update: schemas.SubjectUpdate, db: Session = Depends(database.get_db)):
     sub = db.query(models.Subject).filter(models.Subject.id == subject_id).first()
     if not sub:
@@ -255,7 +256,7 @@ def update_subject(subject_id: int, subject_update: schemas.SubjectUpdate, db: S
     db.refresh(sub)
     return sub
 
-@app.delete("/subjects/{subject_id}")
+@api_router.delete("/subjects/{subject_id}")
 def delete_subject(subject_id: int, db: Session = Depends(database.get_db)):
     sub = db.query(models.Subject).filter(models.Subject.id == subject_id).first()
     if not sub:
@@ -264,7 +265,7 @@ def delete_subject(subject_id: int, db: Session = Depends(database.get_db)):
     db.commit()
     return {"message": "Subject deleted"}
 
-@app.post("/chat")
+@api_router.post("/chat")
 def chat_endpoint(req: schemas.ChatRequest):
     if not GEMINI_API_KEY:
         raise HTTPException(status_code=500, detail="Gemini API key is not configured on the server. Please add GEMINI_API_KEY to backend/.env file.")
@@ -284,3 +285,7 @@ def chat_endpoint(req: schemas.ChatRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
+
+app.include_router(api_router)
+app.include_router(api_router, prefix="/api")
